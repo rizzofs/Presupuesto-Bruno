@@ -646,6 +646,9 @@
               </div>
             </div>
           </div>
+          <div class="presupuesto-section text-center" style="margin-top:2rem; font-size:1.1rem; color:#7c1c2a; border:1px dashed #7c1c2a; background:#fff8f8;">
+            <strong>Este presupuesto tiene una validez de 7 días.<br>Los precios pueden variar sin previo aviso.</strong>
+          </div>
           <div class="d-flex justify-content-between">
             <button type="button" class="btn btn-secondary" onclick="siguientePaso(3)">Anterior</button>
             <button type="button" class="btn btn-success btn-lg" onclick="imprimirVistaPrevia()">Generar PDF</button>
@@ -843,15 +846,29 @@ window.siguientePaso = function(n) {
 </script>
       <script>
 function imprimirVistaPrevia() {
-  // Ocultar la barra de pasos
   var wizardBar = document.querySelector('.wizard-progress');
   if (wizardBar) wizardBar.style.display = 'none';
-  // Mostrar solo la vista previa (paso4 ya está visible)
+  // Cambiar el título visual
+  var titleDiv = document.querySelector('#paso4 .presupuesto-title');
+  var nombreCliente = document.getElementById('nombre4').value || '';
+  var textoOriginal = titleDiv ? titleDiv.innerHTML : '';
+  if (titleDiv && nombreCliente) {
+    titleDiv.innerHTML = 'Presupuesto - ' + nombreCliente;
+  }
+  // Cambiar el <title> de la pestaña
+  var titleTag = document.querySelector('title');
+  var titleTagOriginal = titleTag ? titleTag.innerText : '';
+  if (titleTag && nombreCliente) {
+    titleTag.innerText = 'Presupuesto - ' + nombreCliente;
+  }
   setTimeout(() => {
     window.print();
-    // Restaurar la barra de pasos después de imprimir
     setTimeout(() => {
       if (wizardBar) wizardBar.style.display = '';
+      // Restaurar el título visual
+      if (titleDiv) titleDiv.innerHTML = textoOriginal;
+      // Restaurar el <title> de la pestaña
+      if (titleTag) titleTag.innerText = titleTagOriginal;
     }, 100);
   }, 100);
 }
