@@ -1343,15 +1343,16 @@
       async function compartirPDF() {
         sincronizarHaciaPDFPreview();
         const pdfPreview = document.getElementById("pdf-preview");
-        // Clonar el nodo y agregarlo fuera de pantalla
-        const clone = pdfPreview.cloneNode(true);
-        clone.id = "pdf-preview-clone";
-        clone.style.position = "fixed";
-        clone.style.top = "-9999px";
-        clone.style.left = "-9999px";
-        clone.style.display = "block";
-        document.body.appendChild(clone);
-        await new Promise((res) => setTimeout(res, 200));
+        // Guardar el display original de todos los hijos del body
+        const bodyChildren = Array.from(document.body.children);
+        const originalDisplay = bodyChildren.map(el => el.style.display);
+        // Ocultar todo menos #pdf-preview
+        bodyChildren.forEach(el => {
+          if (el !== pdfPreview) el.style.display = "none";
+          else el.style.display = "block";
+        });
+        window.scrollTo(0, 0);
+        await new Promise((res) => setTimeout(res, 300));
         const opt = {
           margin: 0,
           filename: "Presupuesto.pdf",
@@ -1361,10 +1362,13 @@
         };
         html2pdf()
           .set(opt)
-          .from(clone)
+          .from(pdfPreview)
           .outputPdf("blob")
           .then(async function (pdfBlob) {
-            document.body.removeChild(clone);
+            // Restaurar displays originales
+            bodyChildren.forEach((el, i) => {
+              el.style.display = originalDisplay[i];
+            });
             const nombreCliente = document.getElementById("nombre").value || "Remises Bruno";
             const file = new File(
               [pdfBlob],
