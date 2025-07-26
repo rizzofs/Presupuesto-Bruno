@@ -1345,7 +1345,9 @@
         const pdfPreview = document.getElementById("pdf-preview");
         const prevDisplay = pdfPreview.style.display;
         pdfPreview.style.display = "";
-        await new Promise((res) => setTimeout(res, 100));
+        // Scroll hacia la sección para asegurar renderizado
+        pdfPreview.scrollIntoView({ behavior: "instant", block: "center" });
+        await new Promise((res) => setTimeout(res, 300));
         const opt = {
           margin: 0,
           filename: "Presupuesto.pdf",
