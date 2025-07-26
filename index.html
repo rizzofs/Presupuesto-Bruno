@@ -652,6 +652,7 @@
           <div class="d-flex justify-content-between">
             <button type="button" class="btn btn-secondary" onclick="siguientePaso(3)">Anterior</button>
             <button type="button" class="btn btn-success btn-lg" onclick="imprimirVistaPrevia()">Generar PDF</button>
+            <button type="button" class="btn btn-primary btn-lg" onclick="compartirPDF()">Compartir PDF</button>
           </div>
         </div>
       </form>
@@ -878,6 +879,37 @@ function imprimirVistaPrevia() {
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
     navigator.serviceWorker.register('sw.js');
+  });
+}
+</script>
+    <!-- Incluir html2pdf.js antes del cierre de body -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+async function compartirPDF() {
+  const elemento = document.getElementById('paso4');
+  const opt = {
+    margin:       0,
+    filename:     'Presupuesto.pdf',
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2 },
+    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  html2pdf().set(opt).from(elemento).outputPdf('blob').then(async function(pdfBlob) {
+    const nombreCliente = document.getElementById('nombre4').value || 'Remises Bruno';
+    const file = new File([pdfBlob], `Presupuesto - ${nombreCliente}.pdf`, { type: 'application/pdf' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          title: `Presupuesto - ${nombreCliente}`,
+          text: 'Te envío el presupuesto generado.',
+          files: [file]
+        });
+      } catch (err) {
+        alert('No se pudo compartir el PDF: ' + err);
+      }
+    } else {
+      alert('La función de compartir archivos no está disponible en este dispositivo/navegador.');
+    }
   });
 }
 </script>
