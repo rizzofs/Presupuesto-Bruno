@@ -1,20 +1,28 @@
 {
   "name": "Presupuesto – Remises Bruno",
   "short_name": "Remises Bruno",
-  "start_url": ".",
+  "description": "Aplicación para generar presupuestos de servicios de remises",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#f4f6fa",
   "theme_color": "#7c1c2a",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "assets/img/favicon.png",
+      "src": "Logo.jpg",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/jpeg",
+      "purpose": "any maskable"
     },
     {
-      "src": "assets/img/favicon.png",
+      "src": "Logo.jpg",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/jpeg",
+      "purpose": "any maskable"
     }
-  ]
+  ],
+  "categories": ["business", "productivity"],
+  "lang": "es",
+  "dir": "ltr"
 } 
